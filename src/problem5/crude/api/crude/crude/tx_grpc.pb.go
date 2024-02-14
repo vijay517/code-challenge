@@ -20,7 +20,10 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Msg_UpdateParams_FullMethodName = "/crude.crude.Msg/UpdateParams"
+	Msg_UpdateParams_FullMethodName      = "/crude.crude.Msg/UpdateParams"
+	Msg_CreateTransaction_FullMethodName = "/crude.crude.Msg/CreateTransaction"
+	Msg_UpdateTransaction_FullMethodName = "/crude.crude.Msg/UpdateTransaction"
+	Msg_DeleteTransaction_FullMethodName = "/crude.crude.Msg/DeleteTransaction"
 )
 
 // MsgClient is the client API for Msg service.
@@ -30,6 +33,9 @@ type MsgClient interface {
 	// UpdateParams defines a (governance) operation for updating the module
 	// parameters. The authority defaults to the x/gov module account.
 	UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error)
+	CreateTransaction(ctx context.Context, in *MsgCreateTransaction, opts ...grpc.CallOption) (*MsgCreateTransactionResponse, error)
+	UpdateTransaction(ctx context.Context, in *MsgUpdateTransaction, opts ...grpc.CallOption) (*MsgUpdateTransactionResponse, error)
+	DeleteTransaction(ctx context.Context, in *MsgDeleteTransaction, opts ...grpc.CallOption) (*MsgDeleteTransactionResponse, error)
 }
 
 type msgClient struct {
@@ -49,6 +55,33 @@ func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts 
 	return out, nil
 }
 
+func (c *msgClient) CreateTransaction(ctx context.Context, in *MsgCreateTransaction, opts ...grpc.CallOption) (*MsgCreateTransactionResponse, error) {
+	out := new(MsgCreateTransactionResponse)
+	err := c.cc.Invoke(ctx, Msg_CreateTransaction_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) UpdateTransaction(ctx context.Context, in *MsgUpdateTransaction, opts ...grpc.CallOption) (*MsgUpdateTransactionResponse, error) {
+	out := new(MsgUpdateTransactionResponse)
+	err := c.cc.Invoke(ctx, Msg_UpdateTransaction_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) DeleteTransaction(ctx context.Context, in *MsgDeleteTransaction, opts ...grpc.CallOption) (*MsgDeleteTransactionResponse, error) {
+	out := new(MsgDeleteTransactionResponse)
+	err := c.cc.Invoke(ctx, Msg_DeleteTransaction_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 // All implementations must embed UnimplementedMsgServer
 // for forward compatibility
@@ -56,6 +89,9 @@ type MsgServer interface {
 	// UpdateParams defines a (governance) operation for updating the module
 	// parameters. The authority defaults to the x/gov module account.
 	UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error)
+	CreateTransaction(context.Context, *MsgCreateTransaction) (*MsgCreateTransactionResponse, error)
+	UpdateTransaction(context.Context, *MsgUpdateTransaction) (*MsgUpdateTransactionResponse, error)
+	DeleteTransaction(context.Context, *MsgDeleteTransaction) (*MsgDeleteTransactionResponse, error)
 	mustEmbedUnimplementedMsgServer()
 }
 
@@ -65,6 +101,15 @@ type UnimplementedMsgServer struct {
 
 func (UnimplementedMsgServer) UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateParams not implemented")
+}
+func (UnimplementedMsgServer) CreateTransaction(context.Context, *MsgCreateTransaction) (*MsgCreateTransactionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateTransaction not implemented")
+}
+func (UnimplementedMsgServer) UpdateTransaction(context.Context, *MsgUpdateTransaction) (*MsgUpdateTransactionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateTransaction not implemented")
+}
+func (UnimplementedMsgServer) DeleteTransaction(context.Context, *MsgDeleteTransaction) (*MsgDeleteTransactionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteTransaction not implemented")
 }
 func (UnimplementedMsgServer) mustEmbedUnimplementedMsgServer() {}
 
@@ -97,6 +142,60 @@ func _Msg_UpdateParams_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_CreateTransaction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgCreateTransaction)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).CreateTransaction(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_CreateTransaction_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).CreateTransaction(ctx, req.(*MsgCreateTransaction))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_UpdateTransaction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUpdateTransaction)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).UpdateTransaction(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_UpdateTransaction_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).UpdateTransaction(ctx, req.(*MsgUpdateTransaction))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_DeleteTransaction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgDeleteTransaction)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).DeleteTransaction(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_DeleteTransaction_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).DeleteTransaction(ctx, req.(*MsgDeleteTransaction))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Msg_ServiceDesc is the grpc.ServiceDesc for Msg service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -107,6 +206,18 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateParams",
 			Handler:    _Msg_UpdateParams_Handler,
+		},
+		{
+			MethodName: "CreateTransaction",
+			Handler:    _Msg_CreateTransaction_Handler,
+		},
+		{
+			MethodName: "UpdateTransaction",
+			Handler:    _Msg_UpdateTransaction_Handler,
+		},
+		{
+			MethodName: "DeleteTransaction",
+			Handler:    _Msg_DeleteTransaction_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

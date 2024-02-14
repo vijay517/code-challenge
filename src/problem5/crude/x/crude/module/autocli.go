@@ -17,6 +17,17 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					Use:       "params",
 					Short:     "Shows the parameters of the module",
 				},
+				{
+					RpcMethod: "TransactionAll",
+					Use:       "list-transaction",
+					Short:     "List all transaction",
+				},
+				{
+					RpcMethod:      "Transaction",
+					Use:            "show-transaction [id]",
+					Short:          "Shows a transaction by id",
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "id"}},
+				},
 				// this line is used by ignite scaffolding # autocli/query
 			},
 		},
@@ -27,6 +38,24 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 				{
 					RpcMethod: "UpdateParams",
 					Skip:      true, // skipped because authority gated
+				},
+				{
+					RpcMethod:      "CreateTransaction",
+					Use:            "create-transaction [amount] [remarks]",
+					Short:          "Create transaction",
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "amount"}, {ProtoField: "remarks"}},
+				},
+				{
+					RpcMethod:      "UpdateTransaction",
+					Use:            "update-transaction [id] [amount] [remarks]",
+					Short:          "Update transaction",
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "id"}, {ProtoField: "amount"}, {ProtoField: "remarks"}},
+				},
+				{
+					RpcMethod:      "DeleteTransaction",
+					Use:            "delete-transaction [id]",
+					Short:          "Delete transaction",
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "id"}},
 				},
 				// this line is used by ignite scaffolding # autocli/tx
 			},

@@ -20,7 +20,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Query_Params_FullMethodName = "/crude.crude.Query/Params"
+	Query_Params_FullMethodName         = "/crude.crude.Query/Params"
+	Query_Transaction_FullMethodName    = "/crude.crude.Query/Transaction"
+	Query_TransactionAll_FullMethodName = "/crude.crude.Query/TransactionAll"
 )
 
 // QueryClient is the client API for Query service.
@@ -29,6 +31,9 @@ const (
 type QueryClient interface {
 	// Parameters queries the parameters of the module.
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
+	// Queries a list of Transaction items.
+	Transaction(ctx context.Context, in *QueryGetTransactionRequest, opts ...grpc.CallOption) (*QueryGetTransactionResponse, error)
+	TransactionAll(ctx context.Context, in *QueryAllTransactionRequest, opts ...grpc.CallOption) (*QueryAllTransactionResponse, error)
 }
 
 type queryClient struct {
@@ -48,12 +53,33 @@ func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts .
 	return out, nil
 }
 
+func (c *queryClient) Transaction(ctx context.Context, in *QueryGetTransactionRequest, opts ...grpc.CallOption) (*QueryGetTransactionResponse, error) {
+	out := new(QueryGetTransactionResponse)
+	err := c.cc.Invoke(ctx, Query_Transaction_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) TransactionAll(ctx context.Context, in *QueryAllTransactionRequest, opts ...grpc.CallOption) (*QueryAllTransactionResponse, error) {
+	out := new(QueryAllTransactionResponse)
+	err := c.cc.Invoke(ctx, Query_TransactionAll_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 // All implementations must embed UnimplementedQueryServer
 // for forward compatibility
 type QueryServer interface {
 	// Parameters queries the parameters of the module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
+	// Queries a list of Transaction items.
+	Transaction(context.Context, *QueryGetTransactionRequest) (*QueryGetTransactionResponse, error)
+	TransactionAll(context.Context, *QueryAllTransactionRequest) (*QueryAllTransactionResponse, error)
 	mustEmbedUnimplementedQueryServer()
 }
 
@@ -63,6 +89,12 @@ type UnimplementedQueryServer struct {
 
 func (UnimplementedQueryServer) Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Params not implemented")
+}
+func (UnimplementedQueryServer) Transaction(context.Context, *QueryGetTransactionRequest) (*QueryGetTransactionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Transaction not implemented")
+}
+func (UnimplementedQueryServer) TransactionAll(context.Context, *QueryAllTransactionRequest) (*QueryAllTransactionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TransactionAll not implemented")
 }
 func (UnimplementedQueryServer) mustEmbedUnimplementedQueryServer() {}
 
@@ -95,6 +127,42 @@ func _Query_Params_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_Transaction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryGetTransactionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Transaction(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_Transaction_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Transaction(ctx, req.(*QueryGetTransactionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_TransactionAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAllTransactionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).TransactionAll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_TransactionAll_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).TransactionAll(ctx, req.(*QueryAllTransactionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Query_ServiceDesc is the grpc.ServiceDesc for Query service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -105,6 +173,14 @@ var Query_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Params",
 			Handler:    _Query_Params_Handler,
+		},
+		{
+			MethodName: "Transaction",
+			Handler:    _Query_Transaction_Handler,
+		},
+		{
+			MethodName: "TransactionAll",
+			Handler:    _Query_TransactionAll_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
